@@ -2,7 +2,7 @@
 
 @theme {
   --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;
-  --animate-fade-in: fade-in 0.25s ease-out forwards;
+  --animate-fade-in: fade-in 0.2s ease-out forwards;
   --animate-bounce: bounce 1s infinite;
   --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -13,7 +13,7 @@
     opacity: 1;
   }
   50% {
-    transform: scale(1.2);
+    transform: scale(1.18);
     opacity: 0.75;
   }
 }
@@ -21,7 +21,7 @@
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(-6px) scale(0.97);
+    transform: translateY(-4px) scale(0.98);
   }
   to {
     opacity: 1;
@@ -31,7 +31,7 @@
 
 @keyframes bounce {
   0%, 100% {
-    transform: translateY(-12%);
+    transform: translateY(-10%);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
   50% {
@@ -50,19 +50,32 @@
 }
 
 /* Base styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 html, body {
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Prevent pull-to-refresh and bounce on iOS */
 body {
   position: fixed;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 #root {
@@ -80,7 +93,7 @@ body {
   -webkit-touch-callout: none;
 }
 
-/* Smooth scrolling */
+/* Remove tap highlight on mobile */
 * {
   -webkit-tap-highlight-color: transparent;
 }
@@ -88,60 +101,12 @@ body {
 /* Ensure buttons are touch-friendly */
 button {
   touch-action: manipulation;
+  cursor: pointer;
 }
 
-/* RTL support for Arabic/Hebrew if added later */
-[dir="rtl"] {
-  direction: rtl;
-}
-
-/* Responsive font scaling */
-@media (max-width: 360px) {
-  html {
-    font-size: 14px;
-  }
-}
-
-/* Landscape mode adjustments */
-@media (max-height: 500px) and (orientation: landscape) {
-  .min-h-\[100dvh\] {
-    min-height: 100dvh;
-  }
-}
-
-/* Small phone adjustments */
-@media (max-width: 320px) {
-  .grid-cols-3 {
-    gap: 4px;
-  }
-}
-
-/* Tablet and up */
-@media (min-width: 768px) {
-  button {
-    min-height: 44px;
-  }
-}
-
-/* High DPI displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .border {
-    border-width: 0.5px;
-  }
-}
-
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Dark mode scrollbar */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -149,10 +114,73 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Landscape on mobile - ensure full height usage */
+@media (orientation: landscape) and (max-height: 500px) {
+  #root {
+    overflow: hidden;
+  }
+}
+
+/* Very small screens (iPhone SE, etc.) */
+@media (max-height: 600px) and (max-width: 400px) {
+  .min-h-\[100dvh\] {
+    min-height: 100dvh;
+  }
+}
+
+/* Tablet landscape */
+@media (min-width: 768px) and (orientation: landscape) {
+  .min-h-\[100dvh\] {
+    min-height: 100dvh;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode scrollbar for Firefox */
+@supports (scrollbar-color: auto) {
+  * {
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    scrollbar-width: thin;
+  }
+}
+
+/* Focus visible for accessibility */
+button:focus-visible {
+  outline: 2px solid rgba(74, 222, 128, 0.6);
+  outline-offset: 2px;
+}
+
+/* Prevent iOS zoom on double tap */
+@supports (-webkit-touch-callout: none) {
+  body {
+    touch-action: manipulation;
+  }
+}
+
+/* Safe area support for notched devices */
+@supports (padding: env(safe-area-inset-top)) {
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
